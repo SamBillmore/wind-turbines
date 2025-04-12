@@ -19,7 +19,7 @@ Each day the csv will be updated with data from the last 24 hours, however the s
 
 ## Solution design overview
 
-
+- UPSERT
 
 ## Assumptions made
 
