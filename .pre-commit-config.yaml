@@ -1,0 +1,28 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+    -   id: black
+-   repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+    -   id: isort
+-   repo: https://github.com/pycqa/flake8.git
+    rev: 7.1.1
+    hooks:
+    -   id: flake8
+        additional_dependencies:
+            [
+                Flake8-pyproject==1.2.3,
+                flake8-pytest-style==2.1.0,
+            ]
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: 'v1.13.0'
+    hooks:
+    -   id: mypy

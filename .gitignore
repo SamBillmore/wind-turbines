@@ -172,3 +172,11 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Terraform
+**/.terraform
+**/.terraform.lock.hcl
+**/tfplan
+**.tfvars
+**/terraform.tfstate
+**/terraform.tfstate.backup
