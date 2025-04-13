@@ -31,6 +31,26 @@ resource "databricks_sql_table" "wind_turbines_raw_table" {
   table_type         = "MANAGED"
   warehouse_id       = data.databricks_sql_warehouse.starter_warehouse.id
   depends_on         = [databricks_schema.wind_turbines_raw_schema]
+  column {
+    name = "turbine_id"
+    type = "INTEGER"
+  }
+  column {
+    name = "timestamp"
+    type = "STRING"
+  }
+  column {
+    name = "wind_speed"
+    type = "DOUBLE"
+  }
+  column {
+    name = "wind_direction"
+    type = "INTEGER"
+  }
+  column {
+    name = "power_output"
+    type = "DOUBLE"
+  }
 }
 
 resource "databricks_schema" "wind_turbines_clean_schema" {
@@ -45,6 +65,26 @@ resource "databricks_sql_table" "wind_turbines_clean_table" {
   table_type         = "MANAGED"
   warehouse_id       = data.databricks_sql_warehouse.starter_warehouse.id
   depends_on         = [databricks_schema.wind_turbines_clean_schema]
+  column {
+    name = "turbine_id"
+    type = "INTEGER"
+  }
+  column {
+    name = "timestamp"
+    type = "TIMESTAMP"
+  }
+  column {
+    name = "wind_speed"
+    type = "DOUBLE"
+  }
+  column {
+    name = "wind_direction"
+    type = "INTEGER"
+  }
+  column {
+    name = "power_output"
+    type = "DOUBLE"
+  }
 }
 
 resource "databricks_schema" "wind_turbines_enriched_schema" {
@@ -59,6 +99,26 @@ resource "databricks_sql_table" "wind_turbines_enriched_stats_table" {
   table_type         = "MANAGED"
   warehouse_id       = data.databricks_sql_warehouse.starter_warehouse.id
   depends_on         = [databricks_schema.wind_turbines_enriched_schema]
+  column {
+    name = "turbine_id"
+    type = "INTEGER"
+  }
+  column {
+    name = "date"
+    type = "DATE"
+  }
+  column {
+    name = "min_power"
+    type = "DOUBLE"
+  }
+  column {
+    name = "max_power"
+    type = "DOUBLE"
+  }
+  column {
+    name = "avg_power"
+    type = "DOUBLE"
+  }
 }
 
 resource "databricks_sql_table" "wind_turbines_enriched_anomalies_table" {
@@ -68,4 +128,36 @@ resource "databricks_sql_table" "wind_turbines_enriched_anomalies_table" {
   table_type         = "MANAGED"
   warehouse_id       = data.databricks_sql_warehouse.starter_warehouse.id
   depends_on         = [databricks_schema.wind_turbines_enriched_schema]
+  column {
+    name = "turbine_id"
+    type = "INTEGER"
+  }
+  column {
+    name = "timestamp"
+    type = "TIMESTAMP"
+  }
+  column {
+    name = "power_output"
+    type = "DOUBLE"
+  }
+  column {
+    name = "mean_power"
+    type = "DOUBLE"
+  }
+  column {
+    name = "stddev_power"
+    type = "DOUBLE"
+  }
+  column {
+    name = "upper_bound"
+    type = "DOUBLE"
+  }
+  column {
+    name = "lower_bound"
+    type = "DOUBLE"
+  }
+  column {
+    name = "is_anomaly"
+    type = "BOOLEAN"
+  }
 }
