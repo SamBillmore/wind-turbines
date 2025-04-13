@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "wind-turbines"
 version = "0.0.1"
@@ -6,6 +10,7 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = [
+    "build==1.2.2.post1",
     "pyspark==3.5.3",
     "delta-spark==3.3.0",
     "pytest==8.3.3",
@@ -24,8 +29,8 @@ dev = [
 [project.scripts]
 ingest_data = "wind_turbines.main:ingest_data"
 clean_data = "wind_turbines.main:clean_data"
-identify_anomalies = "wind_turbines.main:identify_anomalies"
 calculate_summary_statistics = "wind_turbines.main:calculate_summary_statistics"
+identify_anomalies = "wind_turbines.main:identify_anomalies"
 
 [tool.pytest.ini_options]
 pythonpath = [

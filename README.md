@@ -1,10 +1,6 @@
 TODO:
-- Test storage_utils
-- Use Enum for overwrite/upsert options?
-- Tidy up README
-- Update Terraform for new tables
-- Add job to Terraform
 - Run on Databricks
+- Tidy up README
 - Mention integration tests
 - Submit
 
@@ -47,11 +43,13 @@ requirements above.
 - Create a Service Principal in UI (https://docs.databricks.com/aws/en/dev-tools/auth/oauth-m2m?language=Terraform#prerequisite-create-a-service-principal)
 - Manually create catalog called `wind_turbines` with Default Storage
 - Create configuration (`deployment/terraform/env.tfvars`)
-- Run `databricks auth login --host <host url>` and authenticate on website
-- Navigate to `deployment/terraform/`
+- Run `databricks auth login --host <host url>` and authenticate on website (only required on initial setup)
+- Navigate to `terraform/`
 - Run `terraform plan -var-file=env.tfvars -out=tfplan`
 - Run `terraform apply "tfplan" `
 - Upload csv files to raw volume
+- Build python wheel: `python -m build`
+- Upload wheel file to python_wheel volume
 
 ## Additional development setup
 
