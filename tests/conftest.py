@@ -1,5 +1,6 @@
 import atexit
 import logging
+from unittest.mock import MagicMock
 
 import pytest
 from pyspark.sql import SparkSession
@@ -61,3 +62,9 @@ def spark() -> SparkSession:
 
     # Cleanup after tests
     cleanup()
+
+
+@pytest.fixture(scope="session")
+def spark_databricks_mock() -> MagicMock:
+    """Fixture for mocking spark interactions with Databricks."""
+    return MagicMock()

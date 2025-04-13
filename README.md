@@ -1,3 +1,15 @@
+TODO:
+- Test storage_utils
+- Use Enum for overwrite/upsert options?
+- Tidy up README
+- Update Terraform for new tables
+- Add job to Terraform
+- Run on Databricks
+- Mention integration tests
+- Submit
+
+
+
 # Wind turbine data processing
 
 Interview case study to process wind turbine data.
