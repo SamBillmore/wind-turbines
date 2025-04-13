@@ -37,7 +37,7 @@ resource "databricks_sql_table" "wind_turbines_raw_table" {
   }
   column {
     name = "timestamp"
-    type = "STRING"
+    type = "TIMESTAMP"
   }
   column {
     name = "wind_speed"
