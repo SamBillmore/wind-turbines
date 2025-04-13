@@ -137,6 +137,14 @@ resource "databricks_sql_table" "wind_turbines_enriched_anomalies_table" {
     type = "TIMESTAMP"
   }
   column {
+    name = "wind_speed"
+    type = "DOUBLE"
+  }
+  column {
+    name = "wind_direction"
+    type = "INTEGER"
+  }
+  column {
     name = "power_output"
     type = "DOUBLE"
   }
