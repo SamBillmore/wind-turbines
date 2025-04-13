@@ -7,7 +7,7 @@ resource "databricks_job" "tf_wind_turbines" {
   environment {
     spec {
       client       = "2"
-      dependencies = ["/Volumes/python_wheels/python_wheels/python_wheels/wind-turbines-0.0.1-py3-none-any.whl"]
+      dependencies = ["/Volumes/wind_turbines/wind_turbines_python_wheels/wind_turbines_python_wheels/wind_turbines-0.0.1-py3-none-any.whl"]
     }
     environment_key = "wind_turbines_wheel_environment"
   }
