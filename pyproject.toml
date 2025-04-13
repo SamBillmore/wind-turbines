@@ -6,6 +6,8 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = [
+    "pyspark==3.5.3",
+    "delta-spark==3.3.0",
     "pytest==8.3.3",
     "pytest-cov==3.0.0",
     "flake8==7.1.1",
@@ -15,9 +17,14 @@ dev = [
     "mypy==1.13.0",
     "pre-commit==4.0.1",
     "isort==5.13.2",
+    "chispa==0.10.0",
 ]
 
 [project.scripts]
+ingest_data = "wind_turbines.main:ingest_data"
+clean_data = "wind_turbines.main:clean_data"
+identify_anomalies = "wind_turbines.main:identify_anomalies"
+calculate_summary_statistics = "wind_turbines.main:calculate_summary_statistics"
 
 [tool.pytest.ini_options]
 pythonpath = [
