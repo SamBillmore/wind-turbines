@@ -29,6 +29,11 @@ def ingest_data() -> None:
         catalog_name="wind_turbines",
         schema_name="wind_turbines_raw",
         table_name="wind_turbines_raw",
+        mode="upsert",
+        merge_condition=(
+            "existing.timestamp = new.timestamp AND "
+            "existing.turbine_id = new.turbine_id"
+        ),
     )
 
 
@@ -49,26 +54,11 @@ def clean_data() -> None:
         catalog_name="wind_turbines",
         schema_name="wind_turbines_clean",
         table_name="wind_turbines_clean",
-    )
-
-
-def identify_anomalies() -> None:
-    """
-    Identify anomalies in the cleaned data and write the results to a delta table.
-    """
-    spark_session = get_spark()
-    df = table_reader(
-        spark=spark_session,
-        catalog_name="wind_turbines",
-        schema_name="wind_turbines_clean",
-        table_name="wind_turbines_clean",
-    )
-    df = flag_anomalies(df=df)
-    table_writer(
-        df=df,
-        catalog_name="wind_turbines",
-        schema_name="wind_turbines_enriched",
-        table_name="wind_turbines_anomalies_identified",
+        mode="upsert",
+        merge_condition=(
+            "existing.timestamp = new.timestamp AND "
+            "existing.turbine_id = new.turbine_id"
+        ),
     )
 
 
@@ -90,4 +80,26 @@ def calculate_summary_statistics() -> None:
         catalog_name="wind_turbines",
         schema_name="wind_turbines_enriched",
         table_name="wind_turbines_summary_statistics",
+        mode="overwrite",
+    )
+
+
+def identify_anomalies() -> None:
+    """
+    Identify anomalies in the cleaned data and write the results to a delta table.
+    """
+    spark_session = get_spark()
+    df = table_reader(
+        spark=spark_session,
+        catalog_name="wind_turbines",
+        schema_name="wind_turbines_clean",
+        table_name="wind_turbines_clean",
+    )
+    df = flag_anomalies(df=df)
+    table_writer(
+        df=df,
+        catalog_name="wind_turbines",
+        schema_name="wind_turbines_enriched",
+        table_name="wind_turbines_anomalies_identified",
+        mode="overwrite",
     )

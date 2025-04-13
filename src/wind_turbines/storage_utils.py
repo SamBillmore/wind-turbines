@@ -39,14 +39,23 @@ def table_reader(
 
 
 def table_writer(
-    df: DataFrame, catalog_name: str, schema_name: str, table_name: str
+    df: DataFrame,
+    catalog_name: str,
+    schema_name: str,
+    table_name: str,
+    mode: str = "upsert",
+    merge_condition: str | None = None,
 ) -> None:
     """
-    Write a Dataframe to a Databricks table using UPSERT.
+    Write a Dataframe to a Databricks table.
     :param df: DataFrame to write.
     :param catalog_name: Name of the catalog.
     :param schema_name: Name of the schema.
     :param table_name: Name of the table.
+    :param mode: Write mode ('upsert' or 'overwrite').
+    :param merge_condition: Merge condition for UPSERT mode.
+    :raises ValueError: If the mode is not supported or if merge_condition is not
+        provided for UPSERT mode.
     :return: DataFrame.
     """
     table_location = f"{catalog_name}.{schema_name}.{table_name}"
@@ -56,14 +65,25 @@ def table_writer(
         df.write.saveAsTable(name=table_location)
         return
 
-    # If table does exist, UPSERT the table with the new data
-    merge_condition = (
-        "existing.timestamp = new.timestamp AND existing.turbine_id = new.turbine_id"
+    # Overwrite the existing table
+    if mode == "overwrite":
+        df.write.mode("overwrite").saveAsTable(name=table_location)
+        return
+
+    # UPSERT the table with the new data
+    if mode == "upsert":
+        if merge_condition is None:
+            raise ValueError("Merge condition must be provided for UPSERT mode.")
+        existing = DeltaTable.forName(
+            sparkSession=df.sparkSession, tableOrViewName=table_location
+        )
+        existing.alias("existing").merge(
+            source=df.alias("new"),
+            condition=merge_condition,
+        ).whenMatchedUpdateAll().whenNotMatchedInsertAll().execute()
+        return
+
+    # Raise an error if the mode is not supported
+    raise ValueError(
+        f"Unsupported mode '{mode}'. Supported modes are 'upsert' and 'overwrite'."
     )
-    existing = DeltaTable.forName(
-        sparkSession=df.sparkSession, tableOrViewName=table_location
-    )
-    existing.alias("existing").merge(
-        source=df.alias("new"),
-        condition=merge_condition,
-    ).whenMatchedUpdateAll().whenNotMatchedInsertAll().execute()

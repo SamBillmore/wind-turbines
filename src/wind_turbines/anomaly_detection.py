@@ -12,15 +12,19 @@ def flag_anomalies(df: DataFrame) -> DataFrame:
     """
     # Calculate mean and standard deviation for each turbine
     stats = df.groupBy("turbine_id").agg(
-        F.mean("power_output").alias("mean_power"),
-        F.stddev("power_output").alias("stddev_power"),
+        F.round(F.mean("power_output"), 4).alias("mean_power"),
+        F.round(F.stddev("power_output"), 4).alias("stddev_power"),
     )
     # Join stats back to original data
     df = df.join(stats, on="turbine_id", how="left")
 
     # Add columns for upper and lower bounds
-    df = df.withColumn("upper_bound", F.col("mean_power") + (2 * F.col("stddev_power")))
-    df = df.withColumn("lower_bound", F.col("mean_power") - (2 * F.col("stddev_power")))
+    df = df.withColumn(
+        "upper_bound", F.round(F.col("mean_power") + (2 * F.col("stddev_power")), 4)
+    )
+    df = df.withColumn(
+        "lower_bound", F.round(F.col("mean_power") - (2 * F.col("stddev_power")), 4)
+    )
 
     # Flag anomalies
     return df.withColumn(
