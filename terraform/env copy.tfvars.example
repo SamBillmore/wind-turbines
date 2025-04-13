@@ -1,0 +1,3 @@
+host = "<Databricks host URL here>"
+clientId = "<service principal client id here>"
+clientSecret = "<service principal client secret here>"
