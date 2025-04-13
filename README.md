@@ -1,10 +1,6 @@
 TODO:
-- Test storage_utils
-- Use Enum for overwrite/upsert options?
-- Tidy up README
-- Update Terraform for new tables
-- Add job to Terraform
 - Run on Databricks
+- Tidy up README
 - Mention integration tests
 - Submit
 
@@ -52,6 +48,8 @@ requirements above.
 - Run `terraform plan -var-file=env.tfvars -out=tfplan`
 - Run `terraform apply "tfplan" `
 - Upload csv files to raw volume
+- Build python wheel
+- Upload wheel file to python_wheel volume
 
 ## Additional development setup
 

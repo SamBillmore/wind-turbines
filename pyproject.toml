@@ -24,8 +24,8 @@ dev = [
 [project.scripts]
 ingest_data = "wind_turbines.main:ingest_data"
 clean_data = "wind_turbines.main:clean_data"
-identify_anomalies = "wind_turbines.main:identify_anomalies"
 calculate_summary_statistics = "wind_turbines.main:calculate_summary_statistics"
+identify_anomalies = "wind_turbines.main:identify_anomalies"
 
 [tool.pytest.ini_options]
 pythonpath = [
