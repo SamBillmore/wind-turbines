@@ -18,6 +18,7 @@ dev = [
     "pre-commit==4.0.1",
     "isort==5.13.2",
     "chispa==0.10.0",
+    "pandas==2.2.3",
 ]
 
 [project.scripts]

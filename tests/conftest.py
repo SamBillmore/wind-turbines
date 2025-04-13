@@ -1,5 +1,7 @@
 import atexit
 import logging
+from typing import Generator
+from unittest.mock import MagicMock
 
 import pytest
 from pyspark.sql import SparkSession
@@ -10,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="session")
-def spark() -> SparkSession:
+def spark() -> Generator[SparkSession, None, None]:
     """Configure and create the Spark session for all tests.
 
     A temporary directory will be created and used to store all Delta tables.
@@ -61,3 +63,9 @@ def spark() -> SparkSession:
 
     # Cleanup after tests
     cleanup()
+
+
+@pytest.fixture(scope="session")
+def spark_databricks_mock() -> MagicMock:
+    """Fixture for mocking spark interactions with Databricks."""
+    return MagicMock()
