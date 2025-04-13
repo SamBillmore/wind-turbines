@@ -1,5 +1,6 @@
 import atexit
 import logging
+from typing import Generator
 from unittest.mock import MagicMock
 
 import pytest
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="session")
-def spark() -> SparkSession:
+def spark() -> Generator[SparkSession, None, None]:
     """Configure and create the Spark session for all tests.
 
     A temporary directory will be created and used to store all Delta tables.
