@@ -59,31 +59,41 @@ def table_writer(
     :return: DataFrame.
     """
     table_location = f"{catalog_name}.{schema_name}.{table_name}"
-
-    # If table doesn't exist, create a new table
     if not df.sparkSession.catalog.tableExists(tableName=table_location):
-        df.write.saveAsTable(name=table_location)
-        return
-
-    # Overwrite the existing table
-    if mode == "overwrite":
-        df.write.mode("overwrite").saveAsTable(name=table_location)
-        return
-
-    # UPSERT the table with the new data
-    if mode == "upsert":
-        if merge_condition is None:
-            raise ValueError("Merge condition must be provided for UPSERT mode.")
-        existing = DeltaTable.forName(
-            sparkSession=df.sparkSession, tableOrViewName=table_location
+        raise ValueError(
+            f"Please create the required table {table_location} using Terraform."
         )
-        existing.alias("existing").merge(
-            source=df.alias("new"),
-            condition=merge_condition,
-        ).whenMatchedUpdateAll().whenNotMatchedInsertAll().execute()
+    if mode == "overwrite":
+        _overwrite_table_writer(df=df, table_location=table_location)
         return
-
-    # Raise an error if the mode is not supported
+    if mode == "upsert":
+        _upsert_table_writer(
+            df=df, table_location=table_location, merge_condition=merge_condition
+        )
+        return
     raise ValueError(
         f"Unsupported mode '{mode}'. Supported modes are 'upsert' and 'overwrite'."
     )
+
+
+def _overwrite_table_writer(
+    df: DataFrame,
+    table_location: str,
+) -> None:
+    df.write.mode("overwrite").saveAsTable(name=table_location)
+
+
+def _upsert_table_writer(
+    df: DataFrame,
+    table_location: str,
+    merge_condition: str | None = None,
+) -> None:
+    if merge_condition is None:
+        raise ValueError("Merge condition must be provided for UPSERT mode.")
+    existing = DeltaTable.forName(
+        sparkSession=df.sparkSession, tableOrViewName=table_location
+    )
+    existing.alias("existing").merge(
+        source=df.alias("new"),
+        condition=merge_condition,
+    ).whenMatchedUpdateAll().whenNotMatchedInsertAll().execute()

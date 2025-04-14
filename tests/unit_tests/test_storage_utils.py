@@ -207,7 +207,7 @@ def test_table_writer_overwrite(spark: SparkSession) -> None:
         )
 
 
-def test_table_writer_error(spark: SparkSession) -> None:
+def test_table_writer_invalid_mode_error(spark: SparkSession) -> None:
     """Test the table_writer function with an invalid mode."""
     # Given some input data
     df = spark.createDataFrame([(1, "test")], schema=["id", "value"])
@@ -222,6 +222,32 @@ def test_table_writer_error(spark: SparkSession) -> None:
     # When we call the function with an invalid mode
     # Then the correct error is raised
     msg = f"Unsupported mode '{mode}'. Supported modes are 'upsert' and 'overwrite'."
+    with pytest.raises(ValueError, match=msg):
+        table_writer(
+            df=df,
+            catalog_name=catalog_name,
+            schema_name=schema_name,
+            table_name=table_name,
+            mode=mode,
+        )
+
+
+def test_table_writer_no_table_error(spark: SparkSession) -> None:
+    """Test the table_writer function when no table exists."""
+    # Given some input data
+    df = spark.createDataFrame([(1, "test")], schema=["id", "value"])
+    catalog_name = "test_catalog"
+    schema_name = "test_schema"
+    table_name = "test_table"
+    mode = "overwrite"
+
+    # Set table exists to False
+    df.sparkSession.catalog.tableExists = MagicMock(return_value=False)
+
+    # When we call the function when the table doesn't exist
+    # Then the correct error is raised
+    table_location = f"{catalog_name}.{schema_name}.{table_name}"
+    msg = f"Please create the required table {table_location} using Terraform."
     with pytest.raises(ValueError, match=msg):
         table_writer(
             df=df,

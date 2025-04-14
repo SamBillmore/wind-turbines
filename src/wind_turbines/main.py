@@ -80,7 +80,10 @@ def calculate_summary_statistics() -> None:
         catalog_name="wind_turbines",
         schema_name="wind_turbines_enriched",
         table_name="wind_turbines_summary_statistics",
-        mode="overwrite",
+        mode="upsert",
+        merge_condition=(
+            "existing.date = new.date AND " "existing.turbine_id = new.turbine_id"
+        ),
     )
 
 
@@ -101,5 +104,9 @@ def identify_anomalies() -> None:
         catalog_name="wind_turbines",
         schema_name="wind_turbines_enriched",
         table_name="wind_turbines_anomalies_identified",
-        mode="overwrite",
+        mode="upsert",
+        merge_condition=(
+            "existing.timestamp = new.timestamp AND "
+            "existing.turbine_id = new.turbine_id"
+        ),
     )
